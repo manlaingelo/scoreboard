@@ -50,6 +50,11 @@ export default {
         })
         .then((result) => {
           console.log(result);
+          this.$notify({
+          group: "foo",
+          type: "success",
+          text: "Тоглолт дууслаа",
+        });
           this.$router.push('/');
         });
     },

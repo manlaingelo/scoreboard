@@ -3,9 +3,11 @@ import VueRouter from 'vue-router';
 import App from './App.vue';
 import routes from './routes'
 import Vuex from 'vuex'
+import Notifications from 'vue-notification'
 
 Vue.use(Vuex)
-Vue.use(VueRouter);
+Vue.use(VueRouter)
+Vue.use(Notifications)
 const router =new VueRouter({
   routes: routes,
   mode: 'history'

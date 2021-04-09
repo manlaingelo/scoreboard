@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <notifications group="foo" />
   </div>
 </template>
 
@@ -11,7 +12,6 @@ export default {
 };
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -20,7 +20,7 @@ export default {
   color: #2c3e50;
   margin: 6rem 2rem 4.8rem 2rem;
   min-height: 80vh;
-font-family: 'Roboto', sans-serif;
+  font-family: "PT Sans", Arial, sans-serif;
 }
 body {
   background: linear-gradient(

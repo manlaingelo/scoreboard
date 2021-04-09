@@ -2,6 +2,7 @@ import Matches from './views/Matches.vue';
 import CreateMatch from './views/CreateMatch.vue';
 import Login from './views/Login.vue';
 import ScoreBoard from './views/ScoreBoard.vue';
+import UpdateMatch from './views/UpdateMatch.vue';
 
 export default[
     {
@@ -24,5 +25,10 @@ export default[
         path: '/score/:slug',
         name: 'ScoreBoard',
         component: ScoreBoard,
+    },
+    {
+        path: '/update/:slug',
+        name: 'UpdateMatch',
+        component: UpdateMatch,
     }
 ];

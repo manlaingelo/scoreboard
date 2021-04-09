@@ -39,45 +39,57 @@ export default {
   methods: {
     async uploadImg(file) {
       var storageRef = firebase.storage().ref();
-      var pathReference = storageRef.child('images/'+file.name);
-      await pathReference.put(file).then((snapshot)=>{
-        console.log("uploaded")
-      })
-      return await pathReference
-        .getDownloadURL()
-        .then((url) => {
-          return url;
-        });
+      var pathReference = storageRef.child("images/" + file.name);
+      await pathReference.put(file).then((snapshot) => {
+        console.log("uploaded");
+      });
+      return await pathReference.getDownloadURL().then((url) => {
+        return url;
+      });
     },
     createMatch() {
-      this.uploadImg(this.img.home).then((urlHome) => {
-        this.uploadImg(this.img.guest).then((urlGuest) => {
-          try {
-            matchesRef
-              .push({
-                home: this.home,
-                guest: this.guest,
-                imgHome: urlHome,
-                imgGuest: urlGuest,
-                homeScore: 0,
-                guestScore: 0,
-                createdUser: firebase.auth().currentUser.displayName,
-                isStarted: false,
-              })
-              .then((result) => {
-                console.log(result);
-                // this.home = "";
-                // this.guest = "";
-                // this.img = {
-                //   home: "",
-                //   guest: "",
-                // };
-              });
-          } catch (error) {
-            console.log("error", error);
-          }
+      if (!this.img.home) {
+        this.$notify({
+          group: "foo",
+          type: "warn",
+          text: "Эзэн багийн зураг оруулна уу!",
         });
-      });
+      } else if (!this.img.guest) {
+        this.$notify({
+          group: "foo",
+          type: "warn",
+          text: "Зочин багийн зураг оруулна уу!",
+        });
+      } else {
+        this.uploadImg(this.img.home).then((urlHome) => {
+          this.uploadImg(this.img.guest).then((urlGuest) => {
+            try {
+              matchesRef
+                .push({
+                  home: this.home,
+                  guest: this.guest,
+                  imgHome: urlHome,
+                  imgGuest: urlGuest,
+                  homeScore: 0,
+                  guestScore: 0,
+                  createdUser: firebase.auth().currentUser.displayName,
+                  isStarted: false,
+                })
+                .then((result) => {
+                  // console.log(result);
+                  this.$notify({
+                    group: "foo",
+                    type: "success",
+                    text: "Амжилттай нэмэгдлээ!!!",
+                  });
+                  this.$router.push("/");
+                });
+            } catch (error) {
+              console.log("error", error);
+            }
+          });
+        });
+      }
     },
     onChange(e) {
       if (e.target.name === "imgHome") {
@@ -93,9 +105,11 @@ export default {
 <style scoped>
 * {
   color: #646464;
+  border: none;
+  outline: none;
 }
 
-label{
+label {
   margin-bottom: 0.5vw;
   display: flex;
   justify-content: flex-start;
@@ -106,7 +120,7 @@ button {
   color: #d3d3d3;
   margin-left: 50%;
 }
-.container{
+.container {
   background: #f1f1f1;
   display: flex;
   justify-content: center;

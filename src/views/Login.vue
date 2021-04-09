@@ -27,6 +27,11 @@ export default {
         this.currentUser = user;
         this.$store.commit("setIsLoggedIn");
         this.$router.push("/");
+        this.$notify({
+          group: "foo",
+          type: "success",
+          text: "Амжилттай нэвтэрлээ!!!",
+        });
       } catch (error) {
         console.log("error", error);
       }

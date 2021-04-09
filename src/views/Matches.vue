@@ -1,24 +1,23 @@
 <template>
   <div class="container">
     <div class="header-container">
-      <span
+      <small
         >Нэвтэрсэн:
-        <small v-if="isLoggedIn">
+        <span v-if="isLoggedIn">
           {{ currentUser.displayName }}
-        </small>
-        <small v-else> Guest </small>
-      </span>
+        </span>
+        <span v-else> Guest </span>
+      </small>
 
       <button v-if="isLoggedIn" @click="logOut">logout</button>
       <button v-else @click="logIn">login</button>
     </div>
     <div class="matches">
       <div class="match-list">
-        <div class="matches-list-header">
+        <div class="match-list-header">
           <h3>Тоглолтын түүхүүд</h3>
           <button v-if="isLoggedIn" @click="goCreate()">+</button>
         </div>
-        <!-- <p>{{tableData}}</p> -->
         <table>
           <thead>
             <tr>
@@ -39,7 +38,6 @@
               :
               <td>{{ data.guestScore }}</td>
               <td>{{ data.guest }}</td>
-              <!-- <td >{{data.date}}</td> -->
               <td v-if="isLoggedIn">
                 <span v-if="data.isStarted">Дууссан</span>
                 <button
@@ -61,18 +59,18 @@
         </table>
       </div>
       <div class="match-detail-container">
-        <div class="matches-list-header">
+        <div class="match-list-header">
           <h3>Тоглолтын дэлгэрэнгүй</h3>
         </div>
         <div class="match-detail">
           <div class="team-img">
-            <img :src="currentMatch.imgHome" alt="home" />
+            <img :src="currentMatch.imgHome" alt="home"/>
             <h1> {{ currentMatch.home }}</h1>
            
           </div>
           <div class="team-img">
             <h1>{{ currentMatch.homeScore }} : {{ currentMatch.guestScore }}</h1>
-            <span>Төлөв: <small>{{currentMatch.isStarted ? 'Дууссан' : 'Эхлээгүй' }}</small></span>
+            <span>Төлөв: {{currentMatch.isStarted ? 'Дууссан' : 'Эхлээгүй' }}</span>
           </div>
           <div class="team-img">
             <img :src="currentMatch.imgGuest" alt="guest" />
@@ -81,9 +79,10 @@
           </div>
         </div>
         <div class="match-footer">
-            <span>Хөтөлсөн: <small>{{currentMatch.startedUser}}</small> </span>
-            <span>Бүртгэсэн: <small>{{currentMatch.createdUser}}</small> </span>
+            <span>Хөтөлсөн: {{currentMatch.startedUser ? currentMatch.startedUser : 'Эхлээгүй'}} </span>
+            <span>Бүртгэсэн: {{currentMatch.createdUser}} </span>
         </div>
+        <button @click="updateMatch(currentMatch)">Засах</button>
       </div>
     </div>
   </div>
@@ -119,6 +118,10 @@ export default {
     startMatch: function (match) {
       this.$router.push("/score/" + match.id);
     },
+    updateMatch: function (match) {
+      // console.log(match);
+      this.$router.push("/update/" + match.id);
+    },
     goCreate: function () {
       this.$router.push("/create");
     },
@@ -126,7 +129,11 @@ export default {
       firebase
         .auth()
         .signOut()
-        .then(() => console.log("logged out"))
+        .then(() => this.$notify({
+          group: "foo",
+          type: "success",
+          text: "Logged out",
+        }))
         .catch((err) => console.log(err.message));
       localStorage.removeItem("isLoggedIn");
       window.location.reload(false);
@@ -142,7 +149,7 @@ export default {
           const matches = [];
           const obj = data.val();
           for (let key in obj) {
-            this.currentMatch = obj[key];
+            this.currentMatch = {id: key, ...obj[key]}
             matches.push({
               id: key,
               guest: obj[key].guest,
@@ -176,7 +183,7 @@ export default {
   border-radius: 15px 15px 15px 15px;
   color: #2c3e50;
 }
-span {
+small {
   margin: 4vh 4vh 0vh 4vh;
 }
 h3 {
@@ -185,7 +192,6 @@ h3 {
   justify-content: flex-start;
   
 }
-
 p {
   font-size: 1.8vw;
   font-weight: bold;
@@ -203,6 +209,7 @@ img {
 button {
   color: #d3d3d3;
   border-radius: 5px ;
+  display: inline-block;
 }
 
 .container {
@@ -226,7 +233,6 @@ button {
   flex-direction: row;
   justify-content: space-evenly;
   width: 100%;
-  
 }
 .match-list {
   padding: 1rem;
@@ -243,23 +249,32 @@ button {
   overflow: auto;
 }
 .match-detail-container {
-  min-width: 35%;
-  min-height: 65vh;
+  /* min-width: 35%; */
   background: #f7f7f7;
   box-shadow: 5px 5px 20px -7px #141414;
   position: relative;
   background: #fff;
   top: 0;
-  align-items: center;
-  align-content: center;
 }
-.matches-list-header button {
+.match-detail {
+  margin: 2rem;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 90%; 
+  /* margin: 0; */
+  padding: 0;
+}
+.match-detail button {
+  margin: 2rem;
+}
+.match-list-header button {
   width: 5vh;
   height: 5vh;
   margin: 0;
   border-radius: 50%;
 }
-.matches-list-header {
+.match-list-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -270,16 +285,7 @@ button {
   margin-bottom: 2vh;
 }
 
-.match-detail {
-  margin: 2rem;
-  display:flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /* width: 90%; */
-  /* height: 90%; */
-  /* margin: 0; */
-  padding: 0;
-}
+
 .team-img{
   display: flex;
   justify-content: center;
@@ -300,12 +306,7 @@ button {
   flex-direction: row;
   justify-content: space-between;
 }
-.header-container button {
-  width: 5vh;
-  height: 5vh;
-  margin: 1vw;
-  border-radius: 50% ;
-}
+
 ::-webkit-scrollbar {
   width: 10px;
   border-radius: 5px;
