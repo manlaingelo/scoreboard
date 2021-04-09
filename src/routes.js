@@ -13,9 +13,7 @@ export default[
         path: '/create',
         component: CreateMatch,
         name: 'CreateMatch',
-        meta: {
-            requiresAuth: true
-        }
+       
     },
     {
         path: '/login',
@@ -26,8 +24,5 @@ export default[
         path: '/score/:slug',
         name: 'ScoreBoard',
         component: ScoreBoard,
-        meta: {
-            requiresAuth: true
-        }
     }
 ];

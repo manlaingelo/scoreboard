@@ -25,7 +25,6 @@ export default {
         var provider = new firebase.auth.FacebookAuthProvider();
         const user = await firebase.auth().signInWithPopup(provider);
         this.currentUser = user;
-        // console.log(this.currentUser);
         this.$store.commit("setIsLoggedIn");
         this.$router.push("/");
       } catch (error) {
@@ -35,7 +34,6 @@ export default {
   },
   beforeCreate() {
     const user = firebase.auth().currentUser;
-    console.log(this.$store.state.isLoggedIn);
     if (this.$store.state.isLoggedIn) {
       this.$router.push("/");
     }
@@ -43,5 +41,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>

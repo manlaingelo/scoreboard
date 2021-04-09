@@ -3,10 +3,10 @@
     <div class="header-container">
       <span
         >Нэвтэрсэн:
-        <span v-if="isLoggedIn">
+        <small v-if="isLoggedIn">
           {{ currentUser.displayName }}
-        </span>
-        <span v-else> Guest </span>
+        </small>
+        <small v-else> Guest </small>
       </span>
 
       <button v-if="isLoggedIn" @click="logOut">logout</button>
@@ -27,7 +27,7 @@
               <th>:</th>
               <th>Оноо</th>
               <th>Зочин</th>
-              <th v-if="isLoggedIn">Эхлэх</th>
+              <th v-if="isLoggedIn">Төлөв</th>
               <th>Харах</th>
               <th v-if="isLoggedIn">Устгах</th>
             </tr>
@@ -60,20 +60,29 @@
           </tbody>
         </table>
       </div>
-      <div class="match-detail-container" v-if="currentMatch !== {}">
-        <h3>Тоглолтын дэлгэрэнгүй</h3>
+      <div class="match-detail-container">
+        <div class="matches-list-header">
+          <h3>Тоглолтын дэлгэрэнгүй</h3>
+        </div>
         <div class="match-detail">
-          <p>
-            {{ currentMatch.home }}
+          <div class="team-img">
             <img :src="currentMatch.imgHome" alt="home" />
-            =
+            <h1> {{ currentMatch.home }}</h1>
+           
+          </div>
+          <div class="team-img">
+            <h1>{{ currentMatch.homeScore }} : {{ currentMatch.guestScore }}</h1>
+            <span>Төлөв: <small>{{currentMatch.isStarted ? 'Дууссан' : 'Эхлээгүй' }}</small></span>
+          </div>
+          <div class="team-img">
             <img :src="currentMatch.imgGuest" alt="guest" />
-            {{ currentMatch.guest }}
-          </p>
-          <hr />
-          <h1>{{ currentMatch.homeScore }} | {{ currentMatch.guestScore }}</h1>
-          <hr />
-          <h1>Эзэн = Зочин</h1>
+            <h1>{{ currentMatch.guest }}</h1>
+            
+          </div>
+        </div>
+        <div class="match-footer">
+            <span>Хөтөлсөн: <small>{{currentMatch.startedUser}}</small> </span>
+            <span>Бүртгэсэн: <small>{{currentMatch.createdUser}}</small> </span>
         </div>
       </div>
     </div>
@@ -142,11 +151,12 @@ export default {
               homeScore: obj[key].homeScore,
               imgGuest: obj[key].imgGuest,
               imgHome: obj[key].imgHome,
+              startedUser: obj[key].startedUser,
+              createdUser: obj[key].createdUser,
               isStarted: obj[key].isStarted,
             });
           }
           this.matches = matches;
-          console.log(matches)
           this.currentUser = firebase.auth().currentUser;
         })
         .catch(function (error) {
@@ -161,103 +171,123 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 * {
   border-radius: 15px 15px 15px 15px;
-  color: #1a1a1a;
+  color: #2c3e50;
 }
 span {
-  color: #2c3e50;
-  margin: 4vh;
+  margin: 4vh 4vh 0vh 4vh;
 }
 h3 {
   margin: 1rem 0rem 1rem 2rem;
   display: flex;
   justify-content: flex-start;
+  
 }
-h1 {
-  word-spacing: 4.5vw;
-}
+
 p {
   font-size: 1.8vw;
   font-weight: bold;
+  word-spacing: 3vw;
 }
 hr {
   border-bottom: 1px solid #2c3e50;
   border-radius: 0;
 }
 img {
-  width: 7vh;
-  height: 4vh;
-  border-radius: 2px;
+  width: 20vh;
+  height: 20vh;
+  border-radius: 50%;
 }
 button {
-  width: 5vh;
-  background: #0d2669;
-  border: 0px solid #fff;
-  border-radius: 7px;
   color: #d3d3d3;
+  border-radius: 5px ;
 }
-h3 button {
-  border-radius: 2px;
-  margin-right: 1vh;
-}
+
 .container {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background: #eeeeee;
+  background: #f7f7ff;
   max-height: 85vh;
   min-height: 80vh;
   position: relative;
   color: #d3d3d3;
-
-  /* overflow: hidden; */
+  /* overflow: auto; */
 }
 .matches {
   position: absolute;
   top: 10vh;
+  bottom: 5vh;
   margin: 1em;
-  /* padding: 0rem 2rem 5rem 2rem; */
+  /* padding: 0rem 0rem 1rem 0rem; */
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
   width: 100%;
+  
 }
 .match-list {
   padding: 1rem;
-  margin-right: 2rem;
-  background: #f7f7f7;
+  /* margin-right: 2rem; */
+  background: #fff;
   min-width: 55%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   box-shadow: 5px 5px 20px -7px #141414;
-}
-
-.matches-list-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border-bottom: 1px solid #2c3e50;
-  border-radius: 0;
-  margin-bottom: 1vh;
+  position: relative;
+  top: 0;
+  background: #fff;
+  overflow: auto;
 }
 .match-detail-container {
   min-width: 35%;
   min-height: 65vh;
   background: #f7f7f7;
   box-shadow: 5px 5px 20px -7px #141414;
-  /* display: none; */
+  position: relative;
+  background: #fff;
+  top: 0;
+  align-items: center;
+  align-content: center;
 }
+.matches-list-header button {
+  width: 5vh;
+  height: 5vh;
+  margin: 0;
+  border-radius: 50%;
+}
+.matches-list-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: solid 2px #c0c0c0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: #fff;
+  margin-bottom: 2vh;
+}
+
 .match-detail {
   margin: 2rem;
-  display: inline-block;
-  width: 90%;
-  height: 90%;
-  margin: 0;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* width: 90%; */
+  /* height: 90%; */
+  /* margin: 0; */
   padding: 0;
+}
+.team-img{
+  display: flex;
   justify-content: center;
+  flex-direction: column;
+}
+.match-footer{
+  display: flex;
+  flex-direction: column;
 }
 .header-container {
   height: 10vh;
@@ -271,7 +301,44 @@ h3 button {
   justify-content: space-between;
 }
 .header-container button {
-  width: 7vh;
-  height: 4vh;
+  width: 5vh;
+  height: 5vh;
+  margin: 1vw;
+  border-radius: 50% ;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+@media only screen and (max-width:500px) {
+  /* For mobile phones: */
+  .match-detail-container {
+    display: none;
+  }
+  .match-list{
+    margin-right: 2rem;
+    padding: 0;
+  }
+  .matches{
+    display: flex;
+    flex-direction: column;
+  }
+  span{
+    font-size: 10px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    margin-top: 5vw;
+    word-spacing: 1px;
+  }
 }
 </style>
