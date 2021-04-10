@@ -82,7 +82,7 @@
             <span>Хөтөлсөн: {{currentMatch.startedUser ? currentMatch.startedUser : 'Эхлээгүй'}} </span>
             <span>Бүртгэсэн: {{currentMatch.createdUser}} </span>
         </div>
-        <button @click="updateMatch(currentMatch)">Засах</button>
+        <button v-if="isLoggedIn" @click="updateMatch(currentMatch)">Засах</button>
       </div>
     </div>
   </div>

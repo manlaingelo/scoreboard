@@ -12,6 +12,9 @@
       placeholder="Эзэн"
     />
     <br />
+    <label for="imgHome">Эзэн багын зураг оруулах:</label>
+    <input type="file" name="imgHome" v-on:change="onChange" />
+    <br />
     <label for="guest">Зочин багын нэр:</label>
     <input type="text" name="guest" v-model="match.guest" placeholder="Зочин" />
     <br />
@@ -22,6 +25,9 @@
       v-model="match.guestScore"
       placeholder="Эзэн"
     />
+    <br />
+    <label for="imgGuest">Зочин багын зураг оруулах:</label>
+    <input type="file" name="imgGuest" v-on:change="onChange" />
     <br />
     <label for="isStarted">Төлөв:</label>
     <select v-model="match.isStarted" name="isStarted">
@@ -40,6 +46,10 @@ export default {
   data() {
     return {
       match: {},
+      img: {
+        home: "",
+        guest: "",
+      },
     };
   },
   methods: {
@@ -64,6 +74,13 @@ export default {
         });
           this.$router.push("/");
         });
+    },
+    onChange(e) {
+      if (e.target.name === "imgHome") {
+        this.img.home = e.target.files[0];
+      } else {
+        this.img.guest = e.target.files[0];
+      }
     },
   },
   created() {
